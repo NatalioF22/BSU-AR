@@ -1,0 +1,183 @@
+{% extends 'statics/front-end-base.html' %}
+{% load static %}
+
+{% block title %}{{ professor.name }} | BSU{% endblock %}
+
+{% block content %}
+<!-- Professor Header -->
+<section class="bg-danger text-white py-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-2">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}" class="text-white">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'public_professors' %}" class="text-white">Professors</a></li>
+            <li class="breadcrumb-item active text-white" aria-current="page">{{ professor.name }}</li>
+          </ol>
+        </nav>
+        <h1 class="display-5 fw-bold mb-0">{{ professor.name }}</h1>
+        <p class="lead">{{ professor.education_level }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Professor Details -->
+<section class="py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4 mb-4 mb-lg-0">
+        <div class="card border-0 shadow-sm text-center">
+          <div class="card-body">
+            <div class="mb-4">
+              {% if professor.picture %}
+              <img src="{{ professor.picture.url }}" alt="{{ professor.name }}" class="rounded-circle img-thumbnail" style="width: 200px; height: 200px; object-fit: cover;">
+              {% else %}
+              <div class="bg-secondary text-white d-flex align-items-center justify-content-center mx-auto rounded-circle" style="width: 200px; height: 200px;">
+                <i class="bi bi-person-fill" style="font-size: 5rem;"></i>
+              </div>
+              {% endif %}
+            </div>
+            <h2 class="h4 card-title">{{ professor.name }}</h2>
+            <p class="card-text text-muted mb-4">{{ professor.education_level }}</p>
+            
+            <div class="d-flex justify-content-center">
+              <div class="px-3 border-end">
+                <h3 class="h2 mb-0">{{ subjects.count }}</h3>
+                <p class="small text-muted mb-0">Subjects</p>
+              </div>
+              <div class="px-3">
+                <h3 class="h2 mb-0">{{ department_count|default:"0" }}</h3>
+                <p class="small text-muted mb-0">Departments</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-8">
+        <!-- Taught Subjects -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-white">
+            <h2 class="h4 mb-0">Courses Taught</h2>
+          </div>
+          <div class="card-body">
+            {% if subjects %}
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Code</th>
+                    <th>Subject</th>
+                    <th>Department</th>
+                    <th>Credits</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for subject in subjects %}
+                  <tr>
+                    <td><strong>{{ subject.name }}</strong></td>
+                    <td>{{ subject.title }}</td>
+                    <td>{{ subject.department.name|default:"--" }}</td>
+                    <td>{{ subject.credit_hours }}</td>
+                    <td>
+                      <a href="{% url 'public_subject_detail' subject.id %}" class="btn btn-sm btn-outline-danger">View</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% else %}
+            <div class="text-center py-4">
+              <i class="bi bi-book display-3 text-muted"></i>
+              <p class="mt-3 text-muted">No subjects currently assigned to this professor.</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        
+        <!-- Additional Information -->
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-white">
+            <h2 class="h4 mb-0">Department Affiliation</h2>
+          </div>
+          <div class="card-body">
+            {% if departments %}
+            <div class="row g-3">
+              {% for dept in departments %}
+              <div class="col-md-6">
+                <div class="card h-100">
+                  <div class="card-body">
+                    <h3 class="h5 card-title">{{ dept.name }}</h3>
+                    <p class="small text-muted">
+                      {{ dept.subject_count }} subjects in this department
+                    </p>
+                    <a href="{% url 'public_department_detail' dept.id %}" class="btn btn-sm btn-outline-secondary">View Department</a>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-muted">This professor is not affiliated with any specific department.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Other Professors -->
+{% if other_professors %}
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="text-center mb-4">
+      <h2 class="h3">Other Faculty Members</h2>
+      <p class="text-muted">Explore more of our outstanding professors</p>
+    </div>
+    
+    <div class="row g-4">
+      {% for other in other_professors %}
+      <div class="col-md-6 col-lg-3">
+        <div class="card h-100 border-0 shadow-sm text-center">
+          <div class="card-body">
+            <div class="mb-3">
+              {% if other.picture %}
+              <img src="{{ other.picture.url }}" alt="{{ other.name }}" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+              {% else %}
+              <div class="bg-secondary text-white d-flex align-items-center justify-content-center mx-auto rounded-circle" style="width: 100px; height: 100px;">
+                <i class="bi bi-person-fill" style="font-size: 2.5rem;"></i>
+              </div>
+              {% endif %}
+            </div>
+            <h3 class="h5 card-title">{{ other.name }}</h3>
+            <p class="card-text text-muted">{{ other.education_level }}</p>
+            <a href="{% url 'public_professor_detail' other.id %}" class="btn btn-sm btn-outline-danger">View Profile</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Related Action -->
+<section class="bg-danger text-white py-4">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center">
+        <h2 class="h4 mb-3">Continue Exploring</h2>
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+          <a href="{% url 'public_professors' %}" class="btn btn-outline-light">All Professors</a>
+          <a href="{% url 'public_subjects' %}" class="btn btn-light">Browse Subjects</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

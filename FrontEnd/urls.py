@@ -1,29 +1,19 @@
-"""
-URL configuration for Core project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.contrib import admin
-from django.urls import path,include
-from django.conf import settings
-from django.conf.urls.static import static
-
-
-from django.urls import path, include
-
+# Update your URLs for frontend routes 
+from django.urls import path
+from . import views
 
 urlpatterns = [
- 
-   
+    # Authentication
+    
+    # Frontend (public) routes
+    path('', views.index, name='index'),
+    path('departments/', views.public_departments, name='public_departments'),
+    path('departments/<int:pk>/', views.public_department_detail, name='public_department_detail'),
+    path('subjects/', views.public_subjects, name='public_subjects'),
+    path('subjects/<int:pk>/', views.public_subject_detail, name='public_subject_detail'),
+    path('roadmaps/', views.public_roadmaps, name='public_roadmaps'),
+    path('roadmaps/<int:pk>/', views.public_roadmap_detail, name='public_roadmap_detail'),
+    path('professors/', views.public_professors, name='public_professors'),
+    path('professors/<int:pk>/', views.public_professor_detail, name='public_professor_detail'),
+    
 ]

@@ -1,0 +1,120 @@
+{% extends 'statics/front-end-base.html' %}
+{% load static %}
+
+{% block title %}Departments | BSU{% endblock %}
+
+{% block content %}
+<!-- Departments Header -->
+<section class="bg-danger text-white py-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h1 class="display-5 fw-bold">Academic Departments</h1>
+        <p class="lead">Explore our diverse range of academic disciplines and programs</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Departments List -->
+<section class="py-5">
+  <div class="container">
+    <div class="row g-4">
+      {% for department in departments %}
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <h2 class="h4 card-title">{{ department.name }}</h2>
+            <p class="card-text text-muted">
+              <small>
+                <span class="me-3"><i class="bi bi-book"></i> {{ department.subject_set.count }} Subjects</span>
+                <span><i class="bi bi-map"></i> {{ department.roadmaps.count }} Roadmaps</span>
+              </small>
+            </p>
+            
+            {% if department.subject_set.count > 0 %}
+            <div class="mb-3">
+              <p class="small mb-2"><strong>Popular Subjects:</strong></p>
+              {% for subject in department.subject_set.all|slice:":3" %}
+              <span class="badge bg-light text-dark me-1 mb-1">{{ subject.name }}</span>
+              {% endfor %}
+              {% if department.subject_set.count > 3 %}
+              <span class="badge bg-light text-dark">+{{ department.subject_set.count|add:"-3" }} more</span>
+              {% endif %}
+            </div>
+            {% endif %}
+            
+            <a href="{% url 'public_department_detail' department.id %}" class="btn btn-outline-danger">View Department</a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center">
+        <div class="py-5">
+          <i class="bi bi-building display-1 text-muted"></i>
+          <h2 class="mt-3">No Departments Available</h2>
+          <p class="text-muted">There are no academic departments listed at the moment.</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Department Statistics -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="display-6 fw-bold">Department Statistics</h2>
+      <p class="lead text-muted">An overview of our academic offerings</p>
+    </div>
+    
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm text-center h-100">
+          <div class="card-body">
+            <i class="bi bi-building text-danger" style="font-size: 3rem;"></i>
+            <h3 class="mt-3 h4">{{ departments.count }}</h3>
+            <p class="text-muted">Academic Departments</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm text-center h-100">
+          <div class="card-body">
+            <i class="bi bi-book text-danger" style="font-size: 3rem;"></i>
+            <h3 class="mt-3 h4">{{ subject_count|default:"N/A" }}</h3>
+            <p class="text-muted">Total Subjects</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm text-center h-100">
+          <div class="card-body">
+            <i class="bi bi-map text-danger" style="font-size: 3rem;"></i>
+            <h3 class="mt-3 h4">{{ roadmap_count|default:"N/A" }}</h3>
+            <p class="text-muted">Academic Roadmaps</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="bg-danger text-white py-4">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center">
+        <h2 class="h3 mb-3">Ready to explore our academic offerings?</h2>
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+          <a href="{% url 'public_subjects' %}" class="btn btn-light">Browse Subjects</a>
+          <a href="{% url 'public_roadmaps' %}" class="btn btn-outline-light">View Roadmaps</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

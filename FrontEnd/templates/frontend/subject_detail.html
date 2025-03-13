@@ -1,0 +1,211 @@
+{% extends 'statics/front-end-base.html' %}
+{% load static %}
+
+{% block title %}{{ subject.name }} - {{ subject.title }} | BSU{% endblock %}
+
+{% block content %}
+<!-- Subject Header -->
+<section class="bg-danger text-white py-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-2">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}" class="text-white">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'public_subjects' %}" class="text-white">Subjects</a></li>
+            <li class="breadcrumb-item active text-white" aria-current="page">{{ subject.name }}</li>
+          </ol>
+        </nav>
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h1 class="h2 fw-bold mb-1">{{ subject.name }}</h1>
+            <p class="lead mb-0">{{ subject.title }}</p>
+          </div>
+          <span class="badge bg-white text-danger fs-5">{{ subject.credit_hours }} Credits</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Subject Details -->
+<section class="py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8">
+        <!-- Main Info -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-white">
+            <h2 class="h4 mb-0">Course Information</h2>
+          </div>
+          <div class="card-body">
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <p class="mb-1 text-muted small text-uppercase">Department</p>
+                <p class="h6">{{ subject.department.name|default:"No Department" }}</p>
+              </div>
+              <div class="col-md-6">
+                <p class="mb-1 text-muted small text-uppercase">Code</p>
+                <p class="h6">{{ subject.name }}</p>
+              </div>
+            </div>
+            
+            <h3 class="h5 mb-3">Description</h3>
+            {% if subject.description %}
+            <p>{{ subject.description|linebreaks }}</p>
+            {% else %}
+            <p class="text-muted">No description available for this subject.</p>
+            {% endif %}
+          </div>
+        </div>
+        
+        <!-- Professor Info -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-white">
+            <h2 class="h4 mb-0">Professors</h2>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              {% for professor in professors %}
+              <div class="col-md-6">
+                <div class="d-flex align-items-center">
+                  {% if professor.picture %}
+                  <img src="{{ professor.picture.url }}" alt="{{ professor.name }}" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                  {% else %}
+                  <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                    <i class="bi bi-person-fill"></i>
+                  </div>
+                  {% endif %}
+                  <div>
+                    <h3 class="h6 mb-0">{{ professor.name }}</h3>
+                    <p class="text-muted small mb-0">{{ professor.education_level }}</p>
+                  </div>
+                </div>
+              </div>
+              {% empty %}
+              <div class="col-12">
+                <p class="text-muted">No professors are currently assigned to this subject.</p>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        
+        <!-- Roadmaps Info -->
+        {% if roadmaps %}
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-white">
+            <h2 class="h4 mb-0">Featured in Roadmaps</h2>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Roadmap</th>
+                    <th>Department</th>
+                    <th>Semester</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for roadmap in roadmaps %}
+                  <tr>
+                    <td>{{ roadmap.name }}</td>
+                    <td>{{ roadmap.department.name }}</td>
+                    <td>Semester {{ roadmap.semester_number }}</td>
+                    <td>
+                      <a href="{% url 'public_roadmap_detail' roadmap.id %}" class="btn btn-sm btn-outline-danger">View</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      
+      <div class="col-lg-4">
+        <!-- Quick Info -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-white">
+            <h2 class="h5 mb-0">Quick Info</h2>
+          </div>
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between px-0">
+                <span><i class="bi bi-book me-2 text-danger"></i> Subject Code</span>
+                <span class="fw-bold">{{ subject.name }}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between px-0">
+                <span><i class="bi bi-clock me-2 text-danger"></i> Credit Hours</span>
+                <span class="fw-bold">{{ subject.credit_hours }}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between px-0">
+                <span><i class="bi bi-building me-2 text-danger"></i> Department</span>
+                <span class="fw-bold">{{ subject.department.name|default:"N/A" }}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between px-0">
+                <span><i class="bi bi-people me-2 text-danger"></i> Professors</span>
+                <span class="fw-bold">{{ professors.count }}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between px-0">
+                <span><i class="bi bi-map me-2 text-danger"></i> In Roadmaps</span>
+                <span class="fw-bold">{{ roadmaps|length }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Related Subjects -->
+        {% if related_subjects %}
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-white">
+            <h2 class="h5 mb-0">Related Subjects</h2>
+          </div>
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+              {% for related in related_subjects %}
+              <li class="list-group-item px-0">
+                <a href="{% url 'public_subject_detail' related.id %}" class="text-decoration-none text-dark">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <h3 class="h6 mb-0">{{ related.name }}</h3>
+                      <p class="small text-muted mb-0">{{ related.title }}</p>
+                    </div>
+                    <span class="badge bg-light text-dark">{{ related.credit_hours }} cr</span>
+                  </div>
+                </a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Related Action -->
+<section class="bg-light py-4">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center">
+        <h2 class="h4 mb-3">Continue Exploring</h2>
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+          <a href="{% url 'public_subjects' %}" class="btn btn-outline-secondary">All Subjects</a>
+          {% if subject.department %}
+          <a href="{% url 'public_department_detail' subject.department.id %}" class="btn btn-outline-secondary">
+            {{ subject.department.name }} Department
+          </a>
+          {% endif %}
+          <a href="{% url 'public_roadmaps' %}" class="btn btn-danger">View Roadmaps</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

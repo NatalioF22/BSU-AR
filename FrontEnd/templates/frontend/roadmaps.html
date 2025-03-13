@@ -1,0 +1,221 @@
+{% extends 'statics/front-end-base.html' %}
+{% load static %}
+
+{% block title %}Academic Roadmaps | BSU{% endblock %}
+
+{% block content %}
+<!-- Roadmaps Header -->
+<section class="bg-danger text-white py-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h1 class="display-5 fw-bold">Academic Roadmaps</h1>
+        <p class="lead">Plan your educational journey with our comprehensive program guides</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Filter Section -->
+<section class="py-4 bg-light">
+  <div class="container">
+    <div class="row g-3">
+      <div class="col-md-8">
+        <div class="input-group">
+          <input type="text" id="roadmapSearch" class="form-control" placeholder="Search roadmaps...">
+          <button class="btn btn-outline-secondary" type="button">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <select id="departmentFilter" class="form-select">
+          <option value="">All Departments</option>
+          {% for dept in departments %}
+          <option value="{{ dept.name }}" {% if selected_department|stringformat:"i" == dept.id|stringformat:"i" %}selected{% endif %}>{{ dept.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Roadmaps List -->
+<section class="py-5">
+  <div class="container">
+    <div class="row g-4" id="roadmapsContainer">
+      {% for roadmap in roadmaps %}
+      <div class="col-md-6 col-lg-4 roadmap-card" data-name="{{ roadmap.name|lower }}" data-department="{{ roadmap.department.name|lower }}">
+        <div class="card h-100 border-0 shadow-sm">
+          {% if roadmap.poster %}
+          <img src="{{ roadmap.poster.url }}" class="card-img-top" alt="{{ roadmap.name }}" style="height: 200px; object-fit: cover;">
+          {% else %}
+          <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+            <i class="bi bi-map" style="font-size: 3rem;"></i>
+          </div>
+          {% endif %}
+          <div class="card-body">
+            <h2 class="h5 card-title">{{ roadmap.name }}</h2>
+            <p class="card-text text-muted">
+              <i class="bi bi-building me-1"></i> {{ roadmap.department.name }}
+            </p>
+            
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <span class="badge bg-light text-dark me-1">8 Semesters</span>
+                <span class="badge bg-light text-dark">
+                  {% with total_subjects=roadmap.semester1.count|add:roadmap.semester2.count|add:roadmap.semester3.count|add:roadmap.semester4.count|add:roadmap.semester5.count|add:roadmap.semester6.count|add:roadmap.semester7.count|add:roadmap.semester8.count %}
+                  {{ total_subjects }} Subjects
+                  {% endwith %}
+                </span>
+              </div>
+              <a href="{% url 'public_roadmap_detail' roadmap.id %}" class="btn btn-sm btn-outline-danger">View Roadmap</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center py-5">
+        <i class="bi bi-map display-1 text-muted"></i>
+        <h2 class="mt-3">No Roadmaps Available</h2>
+        <p class="text-muted">There are no academic roadmaps listed at the moment.</p>
+      </div>
+      {% endfor %}
+    </div>
+    
+    <!-- No Results Message -->
+    <div id="noResults" class="row mt-4 d-none">
+      <div class="col-12 text-center py-5">
+        <i class="bi bi-search display-1 text-muted"></i>
+        <h2 class="mt-3">No Matching Roadmaps</h2>
+        <p class="text-muted">Try adjusting your search criteria.</p>
+        <button id="resetFilters" class="btn btn-outline-danger mt-3">Reset Filters</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Info Section -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mb-4 mb-lg-0">
+        <h2 class="h3 fw-bold mb-3">What is an Academic Roadmap?</h2>
+        <p>An academic roadmap is a comprehensive guide that outlines the courses and requirements needed to complete a degree program. It provides a semester-by-semester plan for students to follow, ensuring they take courses in the appropriate sequence and meet all graduation requirements.</p>
+        <p>Our roadmaps are designed to help you:</p>
+        <ul class="list-unstyled">
+          <li><i class="bi bi-check-circle-fill text-danger me-2"></i> Plan your entire academic journey</li>
+          <li><i class="bi bi-check-circle-fill text-danger me-2"></i> Understand course prerequisites and sequencing</li>
+          <li><i class="bi bi-check-circle-fill text-danger me-2"></i> Balance your course load each semester</li>
+          <li><i class="bi bi-check-circle-fill text-danger me-2"></i> Graduate on time with all requirements fulfilled</li>
+        </ul>
+      </div>
+      <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body p-4">
+            <h3 class="h5 mb-3">Academic Roadmap Structure</h3>
+            <div class="d-flex align-items-start mb-3">
+              <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px; min-width: 36px;">
+                <i class="bi bi-1-circle-fill"></i>
+              </div>
+              <div>
+                <h4 class="h6 mb-1">Eight Semesters</h4>
+                <p class="small text-muted mb-0">Each roadmap covers a standard four-year program with eight semesters of coursework.</p>
+              </div>
+            </div>
+            <div class="d-flex align-items-start mb-3">
+              <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px; min-width: 36px;">
+                <i class="bi bi-2-circle-fill"></i>
+              </div>
+              <div>
+                <h4 class="h6 mb-1">Subject Listings</h4>
+                <p class="small text-muted mb-0">Each semester includes a list of recommended subjects with their credit hours.</p>
+              </div>
+            </div>
+            <div class="d-flex align-items-start">
+              <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px; min-width: 36px;">
+                <i class="bi bi-3-circle-fill"></i>
+              </div>
+              <div>
+                <h4 class="h6 mb-1">Department Specific</h4>
+                <p class="small text-muted mb-0">Roadmaps are tailored to specific academic departments and programs.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const roadmapSearch = document.getElementById('roadmapSearch');
+    const departmentFilter = document.getElementById('departmentFilter');
+    const roadmapCards = document.querySelectorAll('.roadmap-card');
+    const noResults = document.getElementById('noResults');
+    const resetFilters = document.getElementById('resetFilters');
+    const roadmapsContainer = document.getElementById('roadmapsContainer');
+    
+    // Function to filter roadmaps
+    function filterRoadmaps() {
+      const searchTerm = roadmapSearch.value.toLowerCase();
+      const department = departmentFilter.value.toLowerCase();
+      
+      let visibleCount = 0;
+      
+      roadmapCards.forEach(card => {
+        const cardName = card.dataset.name;
+        const cardDepartment = card.dataset.department;
+        
+        // Check if card matches all filters
+        const matchesSearch = cardName.includes(searchTerm);
+        const matchesDepartment = !department || cardDepartment.includes(department);
+        
+        // Show or hide the card
+        if (matchesSearch && matchesDepartment) {
+          card.style.display = '';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      
+      // Show "no results" message if no cards are visible
+      if (visibleCount === 0) {
+        noResults.classList.remove('d-none');
+        roadmapsContainer.classList.add('d-none');
+      } else {
+        noResults.classList.add('d-none');
+        roadmapsContainer.classList.remove('d-none');
+      }
+    }
+    
+    // Add event listeners
+    roadmapSearch.addEventListener('input', filterRoadmaps);
+    departmentFilter.addEventListener('change', filterRoadmaps);
+    
+    // Reset filters
+    resetFilters.addEventListener('click', function() {
+      roadmapSearch.value = '';
+      departmentFilter.value = '';
+      filterRoadmaps();
+    });
+    
+    // Initialize URL parameters for department filter
+    const urlParams = new URLSearchParams(window.location.search);
+    const deptParam = urlParams.get('department');
+    
+    if (deptParam) {
+      // Find the matching department option
+      const options = Array.from(departmentFilter.options);
+      const matchingOption = options.find(opt => opt.value === deptParam);
+      
+      if (matchingOption) {
+        matchingOption.selected = true;
+        filterRoadmaps();
+      }
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,160 @@
+{% extends 'statics/front-end-base.html' %}
+{% load static %}
+
+{% block title %}Professors | BSU{% endblock %}
+
+{% block content %}
+<!-- Professors Header -->
+<section class="bg-danger text-white py-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h1 class="display-5 fw-bold">Meet Our Faculty</h1>
+        <p class="lead">Explore our outstanding professors and academic staff</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Search & Filter -->
+<section class="py-4 bg-light">
+  <div class="container">
+    <div class="row g-3">
+      <div class="col-md-8">
+        <div class="input-group">
+          <input type="text" id="professorSearch" class="form-control" placeholder="Search professors by name or expertise...">
+          <button class="btn btn-outline-secondary" type="button">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <select id="educationFilter" class="form-select">
+          <option value="">All Education Levels</option>
+          <option value="PhD">PhD</option>
+          <option value="Masters">Masters</option>
+          <option value="Bachelor">Bachelor</option>
+          <option value="Professor">Professor</option>
+          <option value="Associate Professor">Associate Professor</option>
+          <option value="Assistant Professor">Assistant Professor</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Professors List -->
+<section class="py-5">
+  <div class="container">
+    <div class="row g-4" id="professorsContainer">
+      {% for professor in professors %}
+      <div class="col-md-6 col-lg-3 professor-card" data-name="{{ professor.name|lower }}" data-education="{{ professor.education_level|lower }}">
+        <div class="card h-100 border-0 shadow-sm text-center">
+          <div class="card-body">
+            <div class="mb-3">
+              {% if professor.picture %}
+              <img src="{{ professor.picture.url }}" alt="{{ professor.name }}" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
+              {% else %}
+              <div class="bg-secondary text-white d-flex align-items-center justify-content-center mx-auto rounded-circle" style="width: 150px; height: 150px;">
+                <i class="bi bi-person-fill" style="font-size: 4rem;"></i>
+              </div>
+              {% endif %}
+            </div>
+            <h2 class="h5 card-title">{{ professor.name }}</h2>
+            <p class="card-text text-muted">{{ professor.education_level }}</p>
+            
+            {% if professor.subjects.all %}
+            <div class="mb-3">
+              <p class="small mb-2"><strong>Teaches:</strong></p>
+              <div style="max-height: 70px; overflow-y: auto;">
+                {% for subject in professor.subjects.all|slice:":3" %}
+                <span class="badge bg-light text-dark me-1 mb-1">{{ subject.name }}</span>
+                {% endfor %}
+                {% if professor.subjects.count > 3 %}
+                <span class="badge bg-light text-dark">+{{ professor.subjects.count|add:"-3" }} more</span>
+                {% endif %}
+              </div>
+            </div>
+            {% endif %}
+            
+            <a href="{% url 'public_professor_detail' professor.id %}" class="btn btn-outline-danger">View Profile</a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center py-5">
+        <i class="bi bi-people display-1 text-muted"></i>
+        <h2 class="mt-3">No Professors Available</h2>
+        <p class="text-muted">There are no professors listed at the moment.</p>
+      </div>
+      {% endfor %}
+    </div>
+    
+    <!-- No Results Message -->
+    <div id="noResults" class="row mt-4 d-none">
+      <div class="col-12 text-center py-5">
+        <i class="bi bi-search display-1 text-muted"></i>
+        <h2 class="mt-3">No Matching Professors</h2>
+        <p class="text-muted">Try adjusting your search criteria.</p>
+        <button id="resetFilters" class="btn btn-outline-danger mt-3">Reset Filters</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const professorSearch = document.getElementById('professorSearch');
+    const educationFilter = document.getElementById('educationFilter');
+    const professorCards = document.querySelectorAll('.professor-card');
+    const noResults = document.getElementById('noResults');
+    const resetFilters = document.getElementById('resetFilters');
+    const professorsContainer = document.getElementById('professorsContainer');
+    
+    // Function to filter professors
+    function filterProfessors() {
+      const searchTerm = professorSearch.value.toLowerCase();
+      const education = educationFilter.value.toLowerCase();
+      
+      let visibleCount = 0;
+      
+      professorCards.forEach(card => {
+        const cardName = card.dataset.name;
+        const cardEducation = card.dataset.education;
+        
+        // Check if card matches all filters
+        const matchesSearch = cardName.includes(searchTerm);
+        const matchesEducation = !education || cardEducation.includes(education);
+        
+        // Show or hide the card
+        if (matchesSearch && matchesEducation) {
+          card.style.display = '';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      
+      // Show "no results" message if no cards are visible
+      if (visibleCount === 0) {
+        noResults.classList.remove('d-none');
+        professorsContainer.classList.add('d-none');
+      } else {
+        noResults.classList.add('d-none');
+        professorsContainer.classList.remove('d-none');
+      }
+    }
+    
+    // Add event listeners
+    professorSearch.addEventListener('input', filterProfessors);
+    educationFilter.addEventListener('change', filterProfessors);
+    
+    // Reset filters
+    resetFilters.addEventListener('click', function() {
+      professorSearch.value = '';
+      educationFilter.value = '';
+      filterProfessors();
+    });
+  });
+</script>
+{% endblock %}

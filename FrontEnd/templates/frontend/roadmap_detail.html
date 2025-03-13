@@ -1,0 +1,502 @@
+{% extends 'statics/front-end-base.html' %}
+{% load static %}
+
+{% block title %}{{ roadmap.name }} | BSU{% endblock %}
+
+{% block content %}
+<!-- Roadmap Header -->
+<section class="bg-danger text-white py-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-2">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}" class="text-white">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'public_roadmaps' %}" class="text-white">Roadmaps</a></li>
+            <li class="breadcrumb-item active text-white" aria-current="page">{{ roadmap.name }}</li>
+          </ol>
+        </nav>
+        <div class="d-md-flex justify-content-between align-items-center">
+          <div>
+            <h1 class="display-5 fw-bold mb-1">{{ roadmap.name }}</h1>
+            <p class="lead mb-0">{{ roadmap.department.name }}</p>
+          </div>
+          
+          {% with total_subjects=roadmap.semester1.count|add:roadmap.semester2.count|add:roadmap.semester3.count|add:roadmap.semester4.count|add:roadmap.semester5.count|add:roadmap.semester6.count|add:roadmap.semester7.count|add:roadmap.semester8.count %}
+          <div class="d-flex mt-3 mt-md-0">
+            <div class="px-3 border-end">
+              <h2 class="h5 mb-0">{{ total_subjects }}</h2>
+              <p class="small mb-0">Total Subjects</p>
+            </div>
+            <div class="px-3">
+              <h2 class="h5 mb-0">8</h2>
+              <p class="small mb-0">Semesters</p>
+            </div>
+          </div>
+          {% endwith %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Roadmap Poster (if available) -->
+{% if roadmap.poster %}
+<section class="py-3 bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+          <img src="{{ roadmap.poster.url }}" alt="{{ roadmap.name }}" class="img-fluid rounded">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Roadmap Details -->
+<section class="py-5">
+  <div class="container">
+    <div class="mb-4">
+      <h2 class="h3">Semester-by-Semester Roadmap</h2>
+      <p class="text-muted">Follow this guide to complete your academic journey</p>
+    </div>
+    
+    <!-- First Year -->
+    <h3 class="h5 mb-3">First Year</h3>
+    <div class="row g-4 mb-5">
+      <!-- Semester 1 -->
+      <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-danger text-white">
+            <h4 class="h5 mb-0">Semester 1</h4>
+          </div>
+          <div class="card-body">
+            {% with semester_subjects=semesters.0.1 %}
+              {% if semester_subjects %}
+                <div class="table-responsive">
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th>Code</th>
+                        <th>Subject</th>
+                        <th>Credits</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for subject in semester_subjects %}
+                      <tr>
+                        <td><a href="{% url 'public_subject_detail' subject.id %}" class="text-decoration-none">{{ subject.name }}</a></td>
+                        <td>{{ subject.title }}</td>
+                        <td>{{ subject.credit_hours }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              {% else %}
+                <p class="text-center text-muted my-3">No subjects assigned for this semester</p>
+              {% endif %}
+            {% endwith %}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Semester 2 -->
+      <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-danger text-white">
+            <h4 class="h5 mb-0">Semester 2</h4>
+          </div>
+          <div class="card-body">
+            {% with semester_subjects=semesters.1.1 %}
+              {% if semester_subjects %}
+                <div class="table-responsive">
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th>Code</th>
+                        <th>Subject</th>
+                        <th>Credits</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for subject in semester_subjects %}
+                      <tr>
+                        <td><a href="{% url 'public_subject_detail' subject.id %}" class="text-decoration-none">{{ subject.name }}</a></td>
+                        <td>{{ subject.title }}</td>
+                        <td>{{ subject.credit_hours }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              {% else %}
+                <p class="text-center text-muted my-3">No subjects assigned for this semester</p>
+              {% endif %}
+            {% endwith %}
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Second Year -->
+    <h3 class="h5 mb-3">Second Year</h3>
+    <div class="row g-4 mb-5">
+      <!-- Semester 3 -->
+      <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-danger text-white">
+            <h4 class="h5 mb-0">Semester 3</h4>
+          </div>
+          <div class="card-body">
+            {% with semester_subjects=semesters.2.1 %}
+              {% if semester_subjects %}
+                <div class="table-responsive">
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th>Code</th>
+                        <th>Subject</th>
+                        <th>Credits</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for subject in semester_subjects %}
+                      <tr>
+                        <td><a href="{% url 'public_subject_detail' subject.id %}" class="text-decoration-none">{{ subject.name }}</a></td>
+                        <td>{{ subject.title }}</td>
+                        <td>{{ subject.credit_hours }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              {% else %}
+                <p class="text-center text-muted my-3">No subjects assigned for this semester</p>
+              {% endif %}
+            {% endwith %}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Semester 4 -->
+      <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-danger text-white">
+            <h4 class="h5 mb-0">Semester 4</h4>
+          </div>
+          <div class="card-body">
+            {% with semester_subjects=semesters.3.1 %}
+              {% if semester_subjects %}
+                <div class="table-responsive">
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th>Code</th>
+                        <th>Subject</th>
+                        <th>Credits</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for subject in semester_subjects %}
+                      <tr>
+                        <td><a href="{% url 'public_subject_detail' subject.id %}" class="text-decoration-none">{{ subject.name }}</a></td>
+                        <td>{{ subject.title }}</td>
+                        <td>{{ subject.credit_hours }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              {% else %}
+                <p class="text-center text-muted my-3">No subjects assigned for this semester</p>
+              {% endif %}
+            {% endwith %}
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Third Year -->
+    <h3 class="h5 mb-3">Third Year</h3>
+    <div class="row g-4 mb-5">
+      <!-- Semester 5 -->
+      <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-danger text-white">
+            <h4 class="h5 mb-0">Semester 5</h4>
+          </div>
+          <div class="card-body">
+            {% with semester_subjects=semesters.4.1 %}
+              {% if semester_subjects %}
+                <div class="table-responsive">
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th>Code</th>
+                        <th>Subject</th>
+                        <th>Credits</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for subject in semester_subjects %}
+                      <tr>
+                        <td><a href="{% url 'public_subject_detail' subject.id %}" class="text-decoration-none">{{ subject.name }}</a></td>
+                        <td>{{ subject.title }}</td>
+                        <td>{{ subject.credit_hours }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              {% else %}
+                <p class="text-center text-muted my-3">No subjects assigned for this semester</p>
+              {% endif %}
+            {% endwith %}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Semester 6 -->
+      <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-danger text-white">
+            <h4 class="h5 mb-0">Semester 6</h4>
+          </div>
+          <div class="card-body">
+            {% with semester_subjects=semesters.5.1 %}
+              {% if semester_subjects %}
+                <div class="table-responsive">
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th>Code</th>
+                        <th>Subject</th>
+                        <th>Credits</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for subject in semester_subjects %}
+                      <tr>
+                        <td><a href="{% url 'public_subject_detail' subject.id %}" class="text-decoration-none">{{ subject.name }}</a></td>
+                        <td>{{ subject.title }}</td>
+                        <td>{{ subject.credit_hours }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              {% else %}
+                <p class="text-center text-muted my-3">No subjects assigned for this semester</p>
+              {% endif %}
+            {% endwith %}
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Fourth Year -->
+    <h3 class="h5 mb-3">Fourth Year</h3>
+    <div class="row g-4 mb-5">
+      <!-- Semester 7 -->
+      <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-danger text-white">
+            <h4 class="h5 mb-0">Semester 7</h4>
+          </div>
+          <div class="card-body">
+            {% with semester_subjects=semesters.6.1 %}
+              {% if semester_subjects %}
+                <div class="table-responsive">
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th>Code</th>
+                        <th>Subject</th>
+                        <th>Credits</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for subject in semester_subjects %}
+                      <tr>
+                        <td><a href="{% url 'public_subject_detail' subject.id %}" class="text-decoration-none">{{ subject.name }}</a></td>
+                        <td>{{ subject.title }}</td>
+                        <td>{{ subject.credit_hours }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              {% else %}
+                <p class="text-center text-muted my-3">No subjects assigned for this semester</p>
+              {% endif %}
+            {% endwith %}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Semester 8 -->
+      <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-danger text-white">
+            <h4 class="h5 mb-0">Semester 8</h4>
+          </div>
+          <div class="card-body">
+            {% with semester_subjects=semesters.7.1 %}
+              {% if semester_subjects %}
+                <div class="table-responsive">
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th>Code</th>
+                        <th>Subject</th>
+                        <th>Credits</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for subject in semester_subjects %}
+                      <tr>
+                        <td><a href="{% url 'public_subject_detail' subject.id %}" class="text-decoration-none">{{ subject.name }}</a></td>
+                        <td>{{ subject.title }}</td>
+                        <td>{{ subject.credit_hours }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              {% else %}
+                <p class="text-center text-muted my-3">No subjects assigned for this semester</p>
+              {% endif %}
+            {% endwith %}
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Credits Summary -->
+    <div class="card border-0 shadow-sm mt-5">
+      <div class="card-header bg-white">
+        <h3 class="h5 mb-0">Program Summary</h3>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-8">
+            {% with total_subjects=roadmap.semester1.count|add:roadmap.semester2.count|add:roadmap.semester3.count|add:roadmap.semester4.count|add:roadmap.semester5.count|add:roadmap.semester6.count|add:roadmap.semester7.count|add:roadmap.semester8.count %}
+            <p>This roadmap consists of <strong>{{ total_subjects }} subjects</strong> across 8 semesters. Students following this roadmap will complete their academic requirements over a period of 4 years.</p>
+            {% endwith %}
+            
+            <div class="alert alert-light border">
+              <h4 class="h6 mb-2">Important Note:</h4>
+              <p class="small mb-0">This roadmap is a suggested academic pathway. Students should consult with academic advisors for personalized guidance and to account for any program changes or requirements.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <h4 class="h6 mb-3">Total Credits by Year:</h4>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between px-0">
+                <span>Year 1 (Semesters 1-2):</span>
+                <span class="fw-bold">
+                  {% with year1_credits=0 %}
+                    {% for subject in roadmap.semester1.all %}
+                      {% with year1_credits=year1_credits|add:subject.credit_hours %}{% endwith %}
+                    {% endfor %}
+                    {% for subject in roadmap.semester2.all %}
+                      {% with year1_credits=year1_credits|add:subject.credit_hours %}{% endwith %}
+                    {% endfor %}
+                    {{ year1_credits }} credits
+                  {% endwith %}
+                </span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between px-0">
+                <span>Year 2 (Semesters 3-4):</span>
+                <span class="fw-bold">
+                  {% with year2_credits=0 %}
+                    {% for subject in roadmap.semester3.all %}
+                      {% with year2_credits=year2_credits|add:subject.credit_hours %}{% endwith %}
+                    {% endfor %}
+                    {% for subject in roadmap.semester4.all %}
+                      {% with year2_credits=year2_credits|add:subject.credit_hours %}{% endwith %}
+                    {% endfor %}
+                    {{ year2_credits }} credits
+                  {% endwith %}
+                </span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between px-0">
+                <span>Year 3 (Semesters 5-6):</span>
+                <span class="fw-bold">
+                  {% with year3_credits=0 %}
+                    {% for subject in roadmap.semester5.all %}
+                      {% with year3_credits=year3_credits|add:subject.credit_hours %}{% endwith %}
+                    {% endfor %}
+                    {% for subject in roadmap.semester6.all %}
+                      {% with year3_credits=year3_credits|add:subject.credit_hours %}{% endwith %}
+                    {% endfor %}
+                    {{ year3_credits }} credits
+                  {% endwith %}
+                </span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between px-0">
+                <span>Year 4 (Semesters 7-8):</span>
+                <span class="fw-bold">
+                  {% with year4_credits=0 %}
+                    {% for subject in roadmap.semester7.all %}
+                      {% with year4_credits=year4_credits|add:subject.credit_hours %}{% endwith %}
+                    {% endfor %}
+                    {% for subject in roadmap.semester8.all %}
+                      {% with year4_credits=year4_credits|add:subject.credit_hours %}{% endwith %}
+                    {% endfor %}
+                    {{ year4_credits }} credits
+                  {% endwith %}
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- More Roadmaps -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="text-center mb-4">
+      <h2 class="h3">Explore More Roadmaps</h2>
+      <p class="text-muted">Discover other academic programs offered by {{ roadmap.department.name }}</p>
+    </div>
+    
+    <div class="row g-4 justify-content-center">
+      {% for other_roadmap in other_roadmaps|slice:":3" %}
+      {% if other_roadmap.id != roadmap.id %}
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+          {% if other_roadmap.poster %}
+          <img src="{{ other_roadmap.poster.url }}" class="card-img-top" alt="{{ other_roadmap.name }}" style="height: 150px; object-fit: cover;">
+          {% else %}
+          <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 150px;">
+            <i class="bi bi-map" style="font-size: 3rem;"></i>
+          </div>
+          {% endif %}
+          <div class="card-body">
+            <h3 class="h5 card-title">{{ other_roadmap.name }}</h3>
+            <p class="card-text text-muted small">{{ other_roadmap.department.name }}</p>
+            <a href="{% url 'public_roadmap_detail' other_roadmap.id %}" class="btn btn-sm btn-outline-danger">View Roadmap</a>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% empty %}
+      <div class="col-12 text-center">
+        <p class="text-muted">No other roadmaps available for this department.</p>
+      </div>
+      {% endfor %}
+    </div>
+    
+    <div class="text-center mt-4">
+      <a href="{% url 'public_roadmaps' %}?department={{ roadmap.department.id }}" class="btn btn-outline-danger">View All {{ roadmap.department.name }} Roadmaps</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
