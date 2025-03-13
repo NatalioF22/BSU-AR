@@ -1,0 +1,344 @@
+{% extends 'statics/base.html' %}
+{% load static %}
+
+{% block title %}Edit Roadmap | BSU{% endblock %}
+
+{% block content %}
+<style>
+  /* Ensure subject items remain visible when matched */
+  .subject-item {
+    display: flex !important; /* Override inline style from JS */
+    align-items: center;
+  }
+  
+  /* Hide items only when filtered out */
+  .subject-item[style*="none"] {
+    display: none !important;
+  }
+  
+  /* Form feedback messages */
+  .alert {
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+  }
+  .alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+  }
+  .alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+  }
+</style>
+
+<section class="py-5">
+  <div class="container">
+    <h2 class="display-5 mb-4">Edit Roadmap - {{ roadmap.name }}</h2>
+    
+    {% if messages %}
+    <div class="messages mb-4">
+        {% for message in messages %}
+        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data" action="{% url 'roadmap_detail' roadmap.id %}" id="roadmapForm">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label">Roadmap Name</label>
+        {{ form.name }}
+        {% if form.name.errors %}
+        <div class="text-danger mt-1">{{ form.name.errors }}</div>
+        {% endif %}
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Department</label>
+        {{ form.department }}
+        {% if form.department.errors %}
+        <div class="text-danger mt-1">{{ form.department.errors }}</div>
+        {% endif %}
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Poster</label>
+        {% if roadmap.poster %}
+        <div class="mb-2">
+          <img src="{{ roadmap.poster.url }}" alt="{{ roadmap.name }}" style="max-height: 100px;" class="img-thumbnail">
+        </div>
+        {% endif %}
+        {{ form.poster }}
+        {% if form.poster.errors %}
+        <div class="text-danger mt-1">{{ form.poster.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="semester-sections">
+        {% for semester_key, semester_label, semester_subjects in semesters %}
+        <div class="mb-5 p-3 border rounded bg-white">
+          <h4 class="mb-3">{{ semester_label }}</h4>
+          <input type="text" class="form-control mb-3 semester-filter" placeholder="Search subjects..." data-semester="{{ forloop.counter }}">
+
+          <div class="row">
+            <div class="col-md-9">
+              <div class="available-subjects border p-3" data-semester="{{ forloop.counter }}" style="height: 300px; overflow-y: auto;">
+                {% for subject in all_subjects %}
+                <div class="form-check subject-item d-flex align-items-center justify-content-between px-2 py-1" 
+                     data-id="{{ subject.id }}" 
+                     data-semester="{{ forloop.parentloop.counter }}">
+                  <div>
+                    <input class="form-check-input" type="checkbox" 
+                          name="{{ semester_key }}" 
+                          value="{{ subject.id }}" 
+                          id="sem{{ forloop.parentloop.counter }}-sub{{ subject.id }}" 
+                          {% if subject in semester_subjects %}checked{% endif %}>
+                    <label class="form-check-label ms-2" 
+                          for="sem{{ forloop.parentloop.counter }}-sub{{ subject.id }}">
+                     {{ subject.name }} - {{ subject.title }}
+                    </label>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="selected-subjects border p-3" data-semester="{{ forloop.counter }}" style="height: 300px; overflow-y: auto;">
+                {% for subject in semester_subjects %}
+                <div class="selected-item bg-light p-2 mb-2 d-flex justify-content-between align-items-center" data-id="{{ subject.id }}">
+                  <span>{{ subject.name }} - {{ subject.title }}</span>
+                  <button type="button" class="btn btn-sm btn-danger remove-subject">×</button>
+                </div>
+                {% empty %}
+                <p class="text-muted">No subjects selected.</p>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Add this to the submit button section in roadmap.html -->
+<div class="text-end mt-4">
+  <a href="{% url 'roadmaps' %}" class="btn btn-secondary me-2">Cancel</a>
+  <button type="submit" class="btn btn-danger" id="saveChangesBtn">
+    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true" id="submitSpinner"></span>
+    <span id="submitText">Save Changes</span>
+  </button>
+</div>
+
+    </form>
+  </div>
+</section>
+
+<style>
+  .subject-item:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+  }
+  .selected-item {
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .remove-subject {
+    padding: 0 5px;
+    line-height: 1;
+  }
+  @media (max-width: 768px) {
+    .col-md-9, .col-md-3 {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+  }
+</style>
+
+<script>// Updated JavaScript for roadmap.html
+
+// Add this JavaScript to the end of your roadmap.html file
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize the selected subjects panel based on checked checkboxes
+  initializeSelectedSubjects();
+  
+  // Handle checkbox changes
+  document.querySelectorAll('.available-subjects input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+      const semester = this.closest('.subject-item').dataset.semester;
+      const subjectId = this.closest('.subject-item').dataset.id;
+      const subjectName = this.closest('.subject-item').querySelector('label').textContent;
+      
+      if (this.checked) {
+        addToSelectedPanel(semester, subjectId, subjectName);
+      } else {
+        removeFromSelectedPanel(semester, subjectId);
+      }
+    });
+  });
+  
+  // Handle remove buttons in selected panel 
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('remove-subject')) {
+      const selectedItem = e.target.closest('.selected-item');
+      const semester = selectedItem.closest('.selected-subjects').dataset.semester;
+      const subjectId = selectedItem.dataset.id;
+      
+      // Uncheck the corresponding checkbox
+      const checkbox = document.querySelector(`.subject-item[data-semester="${semester}"][data-id="${subjectId}"] input[type="checkbox"]`);
+      if (checkbox) checkbox.checked = false;
+      
+      // Remove from selected panel
+      selectedItem.remove();
+      updateEmptyState(semester);
+    }
+  });
+  
+  // Search/filter functionality
+  document.querySelectorAll('.semester-filter').forEach(input => {
+    input.addEventListener('input', function() {
+      const semester = this.dataset.semester;
+      const searchTerm = this.value.toLowerCase();
+      
+      document.querySelectorAll(`.available-subjects[data-semester="${semester}"] .subject-item`).forEach(item => {
+        const text = item.querySelector('label').textContent.toLowerCase();
+        if (text.includes(searchTerm)) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    });
+  });
+  
+  // Form submission
+  const form = document.querySelector('form');
+  form.addEventListener('submit', function(e) {
+    // Create hidden inputs for all selected subjects
+    document.querySelectorAll('.selected-item').forEach(item => {
+      const semester = item.closest('.selected-subjects').dataset.semester;
+      const subjectId = item.dataset.id;
+      const semesterKey = `semester${semester}`;
+      
+      // Check if checkbox already exists and is checked
+      const checkbox = document.querySelector(`.subject-item[data-semester="${semester}"][data-id="${subjectId}"] input[type="checkbox"]`);
+      
+      if (checkbox) {
+        // Make sure the checkbox is checked
+        checkbox.checked = true;
+      } else {
+        // Create a hidden input if no checkbox exists
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = semesterKey;
+        hiddenInput.value = subjectId;
+        form.appendChild(hiddenInput);
+      }
+    });
+    
+    // Log form data for debugging
+    console.log('Form submission data:');
+    const formData = new FormData(form);
+    for (let [name, value] of formData.entries()) {
+      console.log(`${name}: ${value}`);
+    }
+  });
+});
+
+// Helper functions
+function initializeSelectedSubjects() {
+  // Clear all selected panels first
+  document.querySelectorAll('.selected-subjects').forEach(panel => {
+    // Keep only the "No subjects selected" message if it exists
+    const emptyMessage = panel.querySelector('.text-muted');
+    if (emptyMessage) {
+      panel.innerHTML = '';
+      panel.appendChild(emptyMessage);
+    } else {
+      panel.innerHTML = '<p class="text-muted">No subjects selected.</p>';
+    }
+  });
+  
+  // Add items based on checked checkboxes
+  document.querySelectorAll('.subject-item input[type="checkbox"]:checked').forEach(checkbox => {
+    const item = checkbox.closest('.subject-item');
+    const semester = item.dataset.semester;
+    const subjectId = item.dataset.id;
+    const subjectName = item.querySelector('label').textContent;
+    
+    addToSelectedPanel(semester, subjectId, subjectName);
+  });
+}
+
+function addToSelectedPanel(semester, subjectId, subjectName) {
+  const selectedPanel = document.querySelector(`.selected-subjects[data-semester="${semester}"]`);
+  
+  // Remove empty message if it exists
+  const emptyMessage = selectedPanel.querySelector('.text-muted');
+  if (emptyMessage) emptyMessage.remove();
+  
+  // Check if this subject is already in the selected panel
+  if (!selectedPanel.querySelector(`.selected-item[data-id="${subjectId}"]`)) {
+    const selectedItem = document.createElement('div');
+    selectedItem.className = 'selected-item bg-light p-2 mb-2 d-flex justify-content-between align-items-center';
+    selectedItem.dataset.id = subjectId;
+    
+    selectedItem.innerHTML = `
+      <span>${subjectName}</span>
+      <button type="button" class="btn btn-sm btn-danger remove-subject">×</button>
+    `;
+    
+    selectedPanel.appendChild(selectedItem);
+  }
+}
+
+function removeFromSelectedPanel(semester, subjectId) {
+  const selectedPanel = document.querySelector(`.selected-subjects[data-semester="${semester}"]`);
+  const selectedItem = selectedPanel.querySelector(`.selected-item[data-id="${subjectId}"]`);
+  
+  if (selectedItem) {
+    selectedItem.remove();
+    updateEmptyState(semester);
+  }
+}
+
+function updateEmptyState(semester) {
+  const selectedPanel = document.querySelector(`.selected-subjects[data-semester="${semester}"]`);
+  const selectedItems = selectedPanel.querySelectorAll('.selected-item');
+  
+  if (selectedItems.length === 0 && !selectedPanel.querySelector('.text-muted')) {
+    const emptyMessage = document.createElement('p');
+    emptyMessage.className = 'text-muted';
+    emptyMessage.textContent = 'No subjects selected.';
+    selectedPanel.appendChild(emptyMessage);
+  }
+}
+</script>
+
+
+<!-- Add this JavaScript at the end of the file -->
+<script>
+  // Provide visual feedback during form submission
+  document.getElementById('roadmapForm').addEventListener('submit', function(e) {
+    const submitBtn = document.getElementById('saveChangesBtn');
+    const spinner = document.getElementById('submitSpinner');
+    const submitText = document.getElementById('submitText');
+    
+    // Disable the button and show spinner
+    submitBtn.disabled = true;
+    spinner.classList.remove('d-none');
+    submitText.textContent = 'Saving...';
+    
+    // Optional: You can add a timeout to re-enable the button if submission takes too long
+    setTimeout(function() {
+      if (submitBtn.disabled) {
+        submitBtn.disabled = false;
+        spinner.classList.add('d-none');
+        submitText.textContent = 'Save Changes';
+      }
+    }, 10000); // 10 seconds timeout
+  });
+</script>
+{% endblock %}

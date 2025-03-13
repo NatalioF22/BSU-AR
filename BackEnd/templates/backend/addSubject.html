@@ -1,0 +1,135 @@
+{% extends 'statics/base.html' %}
+{% load static %}
+
+{% block title %}Add Subject | BSU{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow">
+          <div class="card-header bg-dark text-white">
+            <h3 class="mb-0">Add New Subject</h3>
+          </div>
+          <div class="card-body">
+            {% if messages %}
+            <div class="messages mb-4">
+                {% for message in messages %}
+                <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'add_subject' %}">
+              {% csrf_token %}
+              
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="{{ form.name.id_for_label }}" class="form-label">Subject Code</label>
+                  {{ form.name }}
+                  {% if form.name.errors %}
+                  <div class="text-danger">{{ form.name.errors }}</div>
+                  {% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label for="{{ form.title.id_for_label }}" class="form-label">Subject Title</label>
+                  {{ form.title }}
+                  {% if form.title.errors %}
+                  <div class="text-danger">{{ form.title.errors }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="{{ form.department.id_for_label }}" class="form-label">Department</label>
+                  {{ form.department }}
+                  {% if form.department.errors %}
+                  <div class="text-danger">{{ form.department.errors }}</div>
+                  {% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label for="{{ form.credit_hours.id_for_label }}" class="form-label">Credit Hours</label>
+                  {{ form.credit_hours }}
+                  {% if form.credit_hours.errors %}
+                  <div class="text-danger">{{ form.credit_hours.errors }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              
+              <div class="mb-4">
+                <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                <div class="text-danger">{{ form.description.errors }}</div>
+                {% endif %}
+              </div>
+              
+              <div class="d-flex justify-content-between">
+                <a href="{% url 'subjects' %}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-danger">Save Subject</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Optional: Add client-side validation
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    
+    form.addEventListener('submit', function(e) {
+      let hasError = false;
+      const name = document.getElementById('{{ form.name.id_for_label }}');
+      const title = document.getElementById('{{ form.title.id_for_label }}');
+      const creditHours = document.getElementById('{{ form.credit_hours.id_for_label }}');
+      
+      // Clear previous error messages
+      document.querySelectorAll('.text-danger').forEach(el => {
+        if (el.dataset.dynamic) el.remove();
+      });
+      
+      // Validate name
+      if (!name.value.trim()) {
+        const error = document.createElement('div');
+        error.className = 'text-danger';
+        error.dataset.dynamic = 'true';
+        error.textContent = 'Subject code is required';
+        name.parentNode.appendChild(error);
+        hasError = true;
+      }
+      
+      // Validate title
+      if (!title.value.trim()) {
+        const error = document.createElement('div');
+        error.className = 'text-danger';
+        error.dataset.dynamic = 'true';
+        error.textContent = 'Subject title is required';
+        title.parentNode.appendChild(error);
+        hasError = true;
+      }
+      
+      // Validate credit hours
+      if (!creditHours.value || parseInt(creditHours.value) < 1) {
+        const error = document.createElement('div');
+        error.className = 'text-danger';
+        error.dataset.dynamic = 'true';
+        error.textContent = 'Credit hours must be at least 1';
+        creditHours.parentNode.appendChild(error);
+        hasError = true;
+      }
+      
+      if (hasError) {
+        e.preventDefault();
+      }
+    });
+  });
+</script>
+{% endblock %}

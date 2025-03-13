@@ -1,0 +1,225 @@
+{% extends 'statics/base.html' %}
+{% load static %}
+
+{% block title %}Edit Subject | BSU{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow">
+          <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Edit Subject</h3>
+            <form method="POST" action="{% url 'delete_subject' subject.id %}" id="deleteSubjectForm" class="d-inline" onsubmit="return confirmDelete()">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-danger">
+                <i class="bi bi-trash"></i> Delete
+              </button>
+            </form>
+          </div>
+          <div class="card-body">
+            {% if messages %}
+            <div class="messages mb-4">
+                {% for message in messages %}
+                <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'subject_detail' subject.id %}">
+              {% csrf_token %}
+              
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="{{ form.name.id_for_label }}" class="form-label">Subject Code</label>
+                  {{ form.name }}
+                  {% if form.name.errors %}
+                  <div class="text-danger">{{ form.name.errors }}</div>
+                  {% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label for="{{ form.title.id_for_label }}" class="form-label">Subject Title</label>
+                  {{ form.title }}
+                  {% if form.title.errors %}
+                  <div class="text-danger">{{ form.title.errors }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="{{ form.department.id_for_label }}" class="form-label">Department</label>
+                  {{ form.department }}
+                  {% if form.department.errors %}
+                  <div class="text-danger">{{ form.department.errors }}</div>
+                  {% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label for="{{ form.credit_hours.id_for_label }}" class="form-label">Credit Hours</label>
+                  {{ form.credit_hours }}
+                  {% if form.credit_hours.errors %}
+                  <div class="text-danger">{{ form.credit_hours.errors }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              
+              <div class="mb-4">
+                <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                <div class="text-danger">{{ form.description.errors }}</div>
+                {% endif %}
+              </div>
+              
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="card h-100">
+                    <div class="card-header bg-light">
+                      <h5 class="mb-0">Associated Professors</h5>
+                    </div>
+                    <div class="card-body">
+                      <div style="max-height: 150px; overflow-y: auto;">
+                        {% for professor in subject.professors.all %}
+                        <div class="d-flex align-items-center mb-2">
+                          {% if professor.picture %}
+                          <img src="{{ professor.picture.url }}" alt="{{ professor.name }}" style="width: 30px; height: 30px; object-fit: cover;" class="rounded-circle me-2">
+                          {% else %}
+                          <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 30px; height: 30px;">
+                            <i class="bi bi-person-fill text-white" style="font-size: 0.8rem;"></i>
+                          </div>
+                          {% endif %}
+                          <span>{{ professor.name }}</span>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted">No professors assigned to this subject</p>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="card h-100">
+                    <div class="card-header bg-light">
+                      <h5 class="mb-0">In Roadmaps</h5>
+                    </div>
+                    <div class="card-body">
+                      <div style="max-height: 150px; overflow-y: auto;">
+                        {% for roadmap in roadmaps %}
+                        <div class="mb-2">
+                          <span class="badge bg-success p-2">{{ roadmap.name }}</span>
+                          <small class="text-muted ms-2">
+                            (Semester {{ roadmap.semester_number }})
+                          </small>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted">This subject is not in any roadmap</p>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="d-flex justify-content-between">
+                <a href="{% url 'subjects' %}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-danger">Save Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function confirmDelete() {
+    const professorsCount = {{ subject.professors.count }};
+    const roadmapsCount = {{ roadmaps|length }};
+    
+    if (professorsCount > 0 || roadmapsCount > 0) {
+      return confirm('This subject is associated with professors or roadmaps. Deleting it may affect these items. Are you sure you want to proceed?');
+    }
+    
+    return confirm('Are you sure you want to delete this subject?');
+  }
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    // Optional: Auto-format subject code to uppercase
+    const nameInput = document.getElementById('{{ form.name.id_for_label }}');
+    
+    nameInput.addEventListener('blur', function() {
+      this.value = this.value.toUpperCase();
+    });
+    
+    // Optional: Add rich text editor for description
+    // This is just a simple example, you might want to use a more robust solution
+    const descriptionTextarea = document.getElementById('{{ form.description.id_for_label }}');
+    
+    // Simple toolbar with basic formatting buttons
+    const toolbar = document.createElement('div');
+    toolbar.className = 'btn-toolbar mb-2';
+    toolbar.innerHTML = `
+      <div class="btn-group me-2">
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-format="bold">
+          <i class="bi bi-type-bold"></i>
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-format="italic">
+          <i class="bi bi-type-italic"></i>
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-format="underline">
+          <i class="bi bi-type-underline"></i>
+        </button>
+      </div>
+      <div class="btn-group">
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-format="bullet">
+          <i class="bi bi-list-ul"></i>
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-format="number">
+          <i class="bi bi-list-ol"></i>
+        </button>
+      </div>
+    `;
+    
+    // Insert toolbar before textarea
+    descriptionTextarea.parentNode.insertBefore(toolbar, descriptionTextarea);
+    
+    // Handle formatting buttons
+    toolbar.querySelectorAll('button').forEach(button => {
+      button.addEventListener('click', function() {
+        const format = this.dataset.format;
+        const textarea = descriptionTextarea;
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const selectedText = textarea.value.substring(start, end);
+        let formattedText = '';
+        
+        switch(format) {
+          case 'bold':
+            formattedText = `**${selectedText}**`;
+            break;
+          case 'italic':
+            formattedText = `*${selectedText}*`;
+            break;
+          case 'underline':
+            formattedText = `_${selectedText}_`;
+            break;
+          case 'bullet':
+            formattedText = selectedText.split('\n').map(line => `• ${line}`).join('\n');
+            break;
+          case 'number':
+            formattedText = selectedText.split('\n').map((line, i) => `${i+1}. ${line}`).join('\n');
+            break;
+        }
+        
+        textarea.value = textarea.value.substring(0, start) + formattedText + textarea.value.substring(end);
+        textarea.focus();
+        textarea.setSelectionRange(start, start + formattedText.length);
+      });
+    });
+  });
+</script>
+{% endblock %}

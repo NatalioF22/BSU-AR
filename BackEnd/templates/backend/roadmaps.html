@@ -1,0 +1,31 @@
+{% extends 'statics/base.html' %}
+{% block title %}All Roadmaps | BSU{% endblock %}
+{% block content %}
+<section class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="display-5">All Roadmaps</h2>
+      <a href="{% url 'add_roadmap' %}" class="btn btn-danger">+ Add Roadmap</a>
+    </div>
+    <div class="row g-4">
+      {% for roadmap in roadmaps %}
+      <div class="col-md-4">
+        <div class="card h-100 shadow">
+          <div class="card-body">
+            <h5 class="card-title">{{ roadmap.name }}</h5>
+            <p class="text-muted">Department: {{ roadmap.department }}</p>
+            <a href="{% url 'roadmap_detail' roadmap.id %}" class="btn btn-outline-primary me-2">View Details</a>
+            <form method="POST" action="{% url 'delete_roadmap' roadmap.id %}" style="display:inline-block;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Are you sure you want to delete this roadmap?')">Delete</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p>No roadmaps available.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

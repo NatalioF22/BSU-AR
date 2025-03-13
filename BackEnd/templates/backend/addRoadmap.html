@@ -1,0 +1,17 @@
+{# addRoadmap.html #}
+{% extends 'statics/base.html' %}
+{% block title %}Add Roadmap{% endblock %}
+{% block content %}
+<section class="py-5">
+  <div class="container">
+    <h2 class="display-5 mb-4">Add New Roadmap</h2>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <div class="text-end mt-4">
+        <button type="submit" class="btn btn-danger">Add Roadmap</button>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

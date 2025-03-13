@@ -1,0 +1,132 @@
+{% extends 'statics/base.html' %}
+{% load static %}
+
+{% block title %}Add Professor | BSU{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow">
+          <div class="card-header bg-dark text-white">
+            <h3 class="mb-0">Add New Professor</h3>
+          </div>
+          <div class="card-body">
+            {% if messages %}
+            <div class="messages mb-4">
+                {% for message in messages %}
+                <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'add_professor' %}" enctype="multipart/form-data">
+              {% csrf_token %}
+              
+              <div class="mb-3">
+                <label for="{{ form.name.id_for_label }}" class="form-label">Professor Name</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                <div class="text-danger">{{ form.name.errors }}</div>
+                {% endif %}
+              </div>
+              
+              <div class="mb-3">
+                <label for="{{ form.education_level.id_for_label }}" class="form-label">Education Level</label>
+                {{ form.education_level }}
+                {% if form.education_level.errors %}
+                <div class="text-danger">{{ form.education_level.errors }}</div>
+                {% endif %}
+              </div>
+              
+              <div class="mb-4">
+                <label for="{{ form.picture.id_for_label }}" class="form-label">Profile Picture</label>
+                <div class="mb-2" id="imagePreviewContainer" style="display: none;">
+                  <img id="imagePreview" src="#" alt="Profile Preview" style="max-height: 150px; max-width: 100%;" class="img-thumbnail">
+                </div>
+                {{ form.picture }}
+                {% if form.picture.errors %}
+                <div class="text-danger">{{ form.picture.errors }}</div>
+                {% endif %}
+                <div class="form-text">Recommended image size: 300x300 pixels</div>
+              </div>
+              
+              <div class="mb-4">
+                <label for="{{ form.subjects.id_for_label }}" class="form-label">Assigned Subjects</label>
+                <div class="border p-3 rounded" style="max-height: 200px; overflow-y: auto;">
+                  {{ form.subjects }}
+                </div>
+                {% if form.subjects.errors %}
+                <div class="text-danger">{{ form.subjects.errors }}</div>
+                {% endif %}
+                <div class="form-text">Hold Ctrl (or Cmd on Mac) to select multiple subjects</div>
+              </div>
+              
+              <div class="d-flex justify-content-between">
+                <a href="{% url 'professors' %}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-danger">Save Professor</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Image preview functionality
+    const pictureInput = document.getElementById('{{ form.picture.id_for_label }}');
+    const imagePreview = document.getElementById('imagePreview');
+    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+    
+    pictureInput.addEventListener('change', function() {
+      if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          imagePreview.src = e.target.result;
+          imagePreviewContainer.style.display = 'block';
+        }
+        
+        reader.readAsDataURL(this.files[0]);
+      } else {
+        imagePreviewContainer.style.display = 'none';
+      }
+    });
+    
+    // Optional: Add search filter for subjects
+    const subjectsSelect = document.getElementById('{{ form.subjects.id_for_label }}');
+    
+    // Create a search input
+    const searchContainer = document.createElement('div');
+    searchContainer.className = 'mb-2';
+    
+    const searchInput = document.createElement('input');
+    searchInput.type = 'text';
+    searchInput.className = 'form-control';
+    searchInput.placeholder = 'Search subjects...';
+    
+    searchContainer.appendChild(searchInput);
+    subjectsSelect.parentNode.insertBefore(searchContainer, subjectsSelect);
+    
+    // Filter subjects based on search input
+    searchInput.addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase();
+      
+      Array.from(subjectsSelect.options).forEach(option => {
+        const text = option.text.toLowerCase();
+        if (text.includes(searchTerm)) {
+          option.style.display = '';
+        } else {
+          option.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends 'statics/base.html' %}
+{% load static %}
+
+{% block title %}Subjects | BSU{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="display-5">Subjects</h2>
+      <a href="{% url 'add_subject' %}" class="btn btn-danger">Add New Subject</a>
+    </div>
+
+    {% if messages %}
+    <div class="messages mb-4">
+        {% for message in messages %}
+        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div class="input-group">
+          <input type="text" id="subjectSearch" class="form-control" placeholder="Search subjects...">
+          <button class="btn btn-outline-secondary" type="button">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <select id="departmentFilter" class="form-select">
+          <option value="">All Departments</option>
+          {% for department in departments %}
+          <option value="{{ department.name }}">{{ department.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select id="creditFilter" class="form-select">
+          <option value="">All Credit Hours</option>
+          <option value="1">1 Credit</option>
+          <option value="2">2 Credits</option>
+          <option value="3">3 Credits</option>
+          <option value="4">4 Credits</option>
+          <option value="5">5+ Credits</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead class="table-dark">
+              <tr>
+                <th scope="col">Code</th>
+                <th scope="col">Title</th>
+                <th scope="col">Department</th>
+                <th scope="col">Credit Hours</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for subject in subjects %}
+              <tr class="subject-row" 
+                  data-department="{{ subject.department.name|default:'' }}" 
+                  data-credits="{{ subject.credit_hours }}">
+                <td>{{ subject.name }}</td>
+                <td>{{ subject.title }}</td>
+                <td>{{ subject.department.name|default:"No Department" }}</td>
+                <td>{{ subject.credit_hours }}</td>
+                <td>
+                  <a href="{% url 'subject_detail' subject.id %}" class="btn btn-sm btn-primary">
+                    <i class="bi bi-pencil-square"></i> Edit
+                  </a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5" class="text-center py-4">No subjects found. <a href="{% url 'add_subject' %}">Add a subject</a>.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const subjectSearch = document.getElementById('subjectSearch');
+    const departmentFilter = document.getElementById('departmentFilter');
+    const creditFilter = document.getElementById('creditFilter');
+    const subjectRows = document.querySelectorAll('.subject-row');
+    
+    // Combined filter function
+    function filterSubjects() {
+      const searchTerm = subjectSearch.value.toLowerCase();
+      const departmentValue = departmentFilter.value;
+      const creditValue = creditFilter.value;
+      
+      subjectRows.forEach(row => {
+        const department = row.dataset.department;
+        const credits = row.dataset.credits;
+        const text = row.textContent.toLowerCase();
+        
+        const matchesSearch = text.includes(searchTerm);
+        const matchesDepartment = !departmentValue || department === departmentValue;
+        const matchesCredits = !creditValue || credits == creditValue || 
+                              (creditValue === '5' && parseInt(credits) >= 5);
+        
+        if (matchesSearch && matchesDepartment && matchesCredits) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+    
+    // Add event listeners
+    subjectSearch.addEventListener('input', filterSubjects);
+    departmentFilter.addEventListener('change', filterSubjects);
+    creditFilter.addEventListener('change', filterSubjects);
+  });
+</script>
+{% endblock %}
