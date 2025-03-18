@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="col-lg-6 d-none d-lg-block">
-        <img src="{% static 'images/hero-image.jpg' %}" alt="Students studying" class="img-fluid rounded shadow-lg" onerror="this.onerror=null; this.src='https://via.placeholder.com/600x400?text=BSU+Academic+Programs';">
+        <img src="{% static 'BSU-LOGO.png' %}" alt="BSU LOGO" class="img-fluid rounded shadow-lg" >
       </div>
     </div>
   </div>
@@ -73,7 +73,7 @@
       <div class="col-md-6 col-lg-4">
         <div class="card h-100 border-0 shadow-sm">
           {% if roadmap.poster %}
-          <img src="{{ roadmap.poster.url }}" class="card-img-top" alt="{{ roadmap.name }}" style="height: 200px; object-fit: cover;">
+          <img src="{{ roadmap.poster.url }}" class="card-img-top" alt="{{ roadmap.name }}" style="height: 200px; object-fit: contain;">
           {% else %}
           <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
             <i class="bi bi-map" style="font-size: 3rem;"></i>

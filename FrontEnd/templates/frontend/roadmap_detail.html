@@ -46,8 +46,8 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-md-8">
-        <div class="card border-0 shadow-sm">
-          <img src="{{ roadmap.poster.url }}" alt="{{ roadmap.name }}" class="img-fluid rounded">
+        <div class="card border-0 shadow-sm" style="display: flex; justify-content: center; align-items: center;">
+          <img src="{{ roadmap.poster.url }}" alt="{{ roadmap.name }}" class="img-fluid rounded" style="object-fit: contain; width: 100px; height:100px;">
         </div>
       </div>
     </div>
@@ -64,7 +64,7 @@
     </div>
     
     <!-- First Year -->
-    <h3 class="h5 mb-3">First Year</h3>
+    <h3 class="h5 mb-3">Freshman Year</h3>
     <div class="row g-4 mb-5">
       <!-- Semester 1 -->
       <div class="col-md-6">
@@ -142,7 +142,7 @@
     </div>
     
     <!-- Second Year -->
-    <h3 class="h5 mb-3">Second Year</h3>
+    <h3 class="h5 mb-3">Sophomore Year</h3>
     <div class="row g-4 mb-5">
       <!-- Semester 3 -->
       <div class="col-md-6">
@@ -220,7 +220,7 @@
     </div>
     
     <!-- Third Year -->
-    <h3 class="h5 mb-3">Third Year</h3>
+    <h3 class="h5 mb-3">Junior Year</h3>
     <div class="row g-4 mb-5">
       <!-- Semester 5 -->
       <div class="col-md-6">
@@ -298,7 +298,7 @@
     </div>
     
     <!-- Fourth Year -->
-    <h3 class="h5 mb-3">Fourth Year</h3>
+    <h3 class="h5 mb-3">Senior Year</h3>
     <div class="row g-4 mb-5">
       <!-- Semester 7 -->
       <div class="col-md-6">
@@ -397,59 +397,23 @@
             <ul class="list-group list-group-flush">
               <li class="list-group-item d-flex justify-content-between px-0">
                 <span>Year 1 (Semesters 1-2):</span>
-                <span class="fw-bold">
-                  {% with year1_credits=0 %}
-                    {% for subject in roadmap.semester1.all %}
-                      {% with year1_credits=year1_credits|add:subject.credit_hours %}{% endwith %}
-                    {% endfor %}
-                    {% for subject in roadmap.semester2.all %}
-                      {% with year1_credits=year1_credits|add:subject.credit_hours %}{% endwith %}
-                    {% endfor %}
-                    {{ year1_credits }} credits
-                  {% endwith %}
-                </span>
+                <span class="fw-bold">{{ year1_credits }} credits</span>
               </li>
               <li class="list-group-item d-flex justify-content-between px-0">
                 <span>Year 2 (Semesters 3-4):</span>
-                <span class="fw-bold">
-                  {% with year2_credits=0 %}
-                    {% for subject in roadmap.semester3.all %}
-                      {% with year2_credits=year2_credits|add:subject.credit_hours %}{% endwith %}
-                    {% endfor %}
-                    {% for subject in roadmap.semester4.all %}
-                      {% with year2_credits=year2_credits|add:subject.credit_hours %}{% endwith %}
-                    {% endfor %}
-                    {{ year2_credits }} credits
-                  {% endwith %}
-                </span>
+                <span class="fw-bold">{{ year2_credits }} credits</span>
               </li>
               <li class="list-group-item d-flex justify-content-between px-0">
                 <span>Year 3 (Semesters 5-6):</span>
-                <span class="fw-bold">
-                  {% with year3_credits=0 %}
-                    {% for subject in roadmap.semester5.all %}
-                      {% with year3_credits=year3_credits|add:subject.credit_hours %}{% endwith %}
-                    {% endfor %}
-                    {% for subject in roadmap.semester6.all %}
-                      {% with year3_credits=year3_credits|add:subject.credit_hours %}{% endwith %}
-                    {% endfor %}
-                    {{ year3_credits }} credits
-                  {% endwith %}
-                </span>
+                <span class="fw-bold">{{ year3_credits }} credits</span>
               </li>
               <li class="list-group-item d-flex justify-content-between px-0">
                 <span>Year 4 (Semesters 7-8):</span>
-                <span class="fw-bold">
-                  {% with year4_credits=0 %}
-                    {% for subject in roadmap.semester7.all %}
-                      {% with year4_credits=year4_credits|add:subject.credit_hours %}{% endwith %}
-                    {% endfor %}
-                    {% for subject in roadmap.semester8.all %}
-                      {% with year4_credits=year4_credits|add:subject.credit_hours %}{% endwith %}
-                    {% endfor %}
-                    {{ year4_credits }} credits
-                  {% endwith %}
-                </span>
+                <span class="fw-bold">{{ year4_credits }} credits</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between px-0 fw-bold text-danger">
+                <span>Total Program Credits:</span>
+                <span>{{ total_credits }} credits</span>
               </li>
             </ul>
           </div>
@@ -473,7 +437,7 @@
       <div class="col-md-4">
         <div class="card h-100 border-0 shadow-sm">
           {% if other_roadmap.poster %}
-          <img src="{{ other_roadmap.poster.url }}" class="card-img-top" alt="{{ other_roadmap.name }}" style="height: 150px; object-fit: cover;">
+          <img src="{{ other_roadmap.poster.url }}" class="card-img-top" alt="{{ other_roadmap.name }}" style="height: 150px; object-fit: contain;">
           {% else %}
           <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 150px;">
             <i class="bi bi-map" style="font-size: 3rem;"></i>

@@ -109,6 +109,21 @@ def public_roadmap_detail(request, pk):
     """View for public detail page of a single roadmap."""
     roadmap = get_object_or_404(Roadmap, pk=pk)
     
+    # Calculate credit totals
+    year1_credits = sum(subject.credit_hours for subject in roadmap.semester1.all()) + \
+                    sum(subject.credit_hours for subject in roadmap.semester2.all())
+    
+    year2_credits = sum(subject.credit_hours for subject in roadmap.semester3.all()) + \
+                    sum(subject.credit_hours for subject in roadmap.semester4.all())
+    
+    year3_credits = sum(subject.credit_hours for subject in roadmap.semester5.all()) + \
+                    sum(subject.credit_hours for subject in roadmap.semester6.all())
+    
+    year4_credits = sum(subject.credit_hours for subject in roadmap.semester7.all()) + \
+                    sum(subject.credit_hours for subject in roadmap.semester8.all())
+    
+    total_credits = year1_credits + year2_credits + year3_credits + year4_credits
+    
     semesters = [
         ('Semester 1', roadmap.semester1.all()),
         ('Semester 2', roadmap.semester2.all()),
@@ -120,10 +135,20 @@ def public_roadmap_detail(request, pk):
         ('Semester 8', roadmap.semester8.all()),
     ]
     
+    # Get other roadmaps from the same department
+    other_roadmaps = Roadmap.objects.filter(department=roadmap.department).exclude(pk=roadmap.pk)
+    
     context = {
         'roadmap': roadmap,
         'semesters': semesters,
+        'other_roadmaps': other_roadmaps,
+        'year1_credits': year1_credits,
+        'year2_credits': year2_credits,
+        'year3_credits': year3_credits,
+        'year4_credits': year4_credits,
+        'total_credits': total_credits,
     }
+    
     return render(request, 'frontend/roadmap_detail.html', context)
 
 def public_professors(request):
