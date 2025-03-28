@@ -97,6 +97,54 @@
       </div>
     </div>
   </div>
+
+  <!-- Pagination -->
+<div class="row mt-4">
+  <div class="col-12">
+    <nav aria-label="Subject pagination">
+      {% if subjects.has_other_pages %}
+      <ul class="pagination justify-content-center">
+        <!-- Previous button -->
+        {% if subjects.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ subjects.previous_page_number }}{% if selected_department %}&department={{ selected_department }}{% endif %}" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">&laquo;</span>
+        </li>
+        {% endif %}
+        
+        <!-- Page numbers -->
+        {% for i in subjects.paginator.page_range %}
+          {% if subjects.number == i %}
+          <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+          {% else %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ i }}{% if selected_department %}&department={{ selected_department }}{% endif %}">{{ i }}</a>
+          </li>
+          {% endif %}
+        {% endfor %}
+        
+        <!-- Next button -->
+        {% if subjects.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ subjects.next_page_number }}{% if selected_department %}&department={{ selected_department }}{% endif %}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">&raquo;</span>
+        </li>
+        {% endif %}
+      </ul>
+      {% endif %}
+    </nav>
+  </div>
+</div>
 </section>
 
 <script>
@@ -150,7 +198,13 @@
     
     // Add event listeners
     subjectSearch.addEventListener('input', filterSubjects);
-    departmentFilter.addEventListener('change', filterSubjects);
+    departmentFilter.addEventListener('change', function() {
+      // Reset to first page when changing department
+      const url = new URL(window.location);
+      url.searchParams.set('department', this.value);
+      url.searchParams.delete('page'); // Reset to page 1
+      window.location = url;
+    });
     creditFilter.addEventListener('change', filterSubjects);
     
     // Reset filters
@@ -158,7 +212,12 @@
       subjectSearch.value = '';
       departmentFilter.value = '';
       creditFilter.value = '';
-      filterSubjects();
+      
+      // Reset URL parameters and refresh
+      const url = new URL(window.location);
+      url.searchParams.delete('department');
+      url.searchParams.delete('page');
+      window.location = url;
     });
     
     // Initialize URL parameters for department filter

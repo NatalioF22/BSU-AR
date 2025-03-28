@@ -1,0 +1,208 @@
+class_name,title
+AMST 220,Introduction to American Studies
+AMST 285,Intensive American Studies
+AMST 399,Special Topics in American Studies
+ASIA 200,Introduction to Asian Studies
+COMM 256,Film History
+COMM 257,Communication Studies Travel Course - All Majors
+COMM 258,Communication Studies Travel Course - All Majors (Writing Intensive)
+COMM 261,Global Cinema
+COMM 356,International Study in Communication
+COMM 457,Communication Studies Advanced Travel Course
+COMM 458,Communication Studies Advanced Travel Course (Writing Intensive)
+ENGL 206,Sustainability: Reading and Writing the Environment
+ENGL 211,World Literature to 1500
+ENGL 214,The Classical Tradition
+ENGL 216,Early Irish and Celtic Literature
+ENGL 221,Major British Writers to 1800
+ENGL 222,Major British Writers since 1800
+ENGL 231,Major American Writers to 1865
+ENGL 232,Major American Writers since 1865
+ENGL 233,Introduction to the African American Novel
+ENGL 235,Topics in Native American Literature
+ENGL 241,Shakespeare
+ENGL 251,Literary Themes
+ENGL 252,Literary Types
+ENGL 253,Non-Western Literature
+ENGL 254,Literary Interpretation for Elementary Education Majors
+ENGL 255,East Asian Literature in Translation
+ENGL 261,Film Study: Introduction to the Art
+ENGL 262,Film Study: Literature and Film
+ENGL 269,Classic ChildrenÕs Literature
+ENGL 277,Topics in Latin American and Caribbean Literary Studies
+ENGL 355,International Study Tour
+ENSL 101,English as a Second Language I
+ENSL 102,English as a Second Language II
+ENSL 151,Intermediate English as a Second Language
+GRST 200,Introduction to World Religions
+HIST 111,Western Civilization to the Reformation
+HIST 112,Western Civilization since the Reformation
+HIST 131,World History to 1500
+HIST 132,World History since 1500
+HIST 151,Asian Civilization
+HIST 161,History and Culture of Mexico
+HIST 221,United States History and Constitutions to 1865
+HIST 222,United States History and Constitutions since 1865
+HIST 251,African American History
+LAAR 101,Elementary Arabic I
+LAAR 102,Elementary Arabic II
+LACH 101,Elementary Chinese I
+LACH 102,Elementary Chinese II
+LACV 101,Elementary Cape Verde Language I
+LACV 102,Elementary Cape Verde Language II
+LAFR 101,Elementary French I
+LAFR 102,Elementary French II
+LAFR 151,Intermediate French I
+LAGR 101,Elementary Modern Greek I
+LAHE 101,Elementary Modern Hebrew I
+LAIT 101,Elementary Italian I
+LAIT 102,Elementary Italian II
+LAJA 100,Introduction to the Japanese Writing System
+LAJA 101,Elementary Japanese I
+LAJA 102,Elementary Japanese II
+LAJA 151,Intermediate Japanese
+LAJA 172,Business Japanese
+LAJA 235,Japanese Collaborative Online International Learning (COIL)
+LAJA 335,Peer Tutor in Japanese
+LAKO 101,Elementary Korean I
+LAKO 102,Elementary Korean II
+LALT 101,Elementary Latin I
+LALT 102,Elementary Latin II
+LANG 260,The Art of Zen
+LANG 350,International WomenÕs Cinema
+LANG 355,Language Study Tour
+LAPO 101,Elementary Portuguese I
+LAPO 102,Elementary Portuguese II
+LAPO 151,Intermediate Portuguese I
+LAPO 152,Intermediate Portuguese II
+LARU 101,Elementary Russian I
+LASP 101,Elementary Spanish I
+LASP 102,Elementary Spanish II
+LASP 151,Intermediate Spanish I
+LASP 165,Spanish for the Healthcare Professions
+LASP 171,Intermediate Spanish for Elementary Education
+LASP 200,Intermediate Spanish II
+LASP 245,Spanish Culture and Language for Social Work
+LASW 101,Elementary Swahili I
+LTAC 210,Introduction to Latinx and Caribbean Diaspora Studies
+MENA 260,Introduction to Middle East and North Africa
+MENA 460,Seminar on Middle East and North Africa
+PHIL 151,Introduction to Philosophy
+PHIL 152,Contemporary Moral Problems
+PHIL 153,Ethics
+PHIL 155,World Philosophy
+PHIL 203,Happiness and the Meaning of Life
+PHIL 204,Sex and Personal Relations
+PHIL 205,Biomedical Ethics
+PHIL 211,Inductive Logic
+PHIL 213,Philosophies of China and Japan
+PHIL 214,Philosophy of Race
+PHIL 215,Environmental Ethics
+PHIL 216,Values and Technology
+PHIL 217,Ethical Issues in Business
+PHIL 219,Public Health Ethics
+PHIL 222,Philosophy of Law
+PHIL 225,Philosophy of Art
+PHIL 228,Philosophy of Religion
+PHIL 231,"Amoralism, Egoism and Altruism"
+PHIL 232,Philosophy and Feminist Thought
+PHIL 234,"Free Will, Determinism and Responsibility"
+PHIL 235,Political Philosophy
+PHIL 236,Film and Philosophy
+PHIL 237,Philosophy of ArtiÞcial Intelligence
+PHIL 238,Star Wars and Philosophy
+PHIL 239,"Property, Power and Subjugation"
+PHIL 241,Philosophy of Medicine
+PHIL 242,Philosophy of Human Nature
+PHIL 246,Existentialism and Literature
+PHIL 247,Existentialism
+PHIL 252,Philosophy of Money
+PHIL 260,Philosophy of Science
+PHIL 261,"SEISMIC Problems: Science, Values and Society"
+PHIL 288,Philosophy of Language
+PHIL 295,Readings in Philosophy
+PHIL 301,Ancient Philosophy
+PHIL 302,Medieval Philosophy
+PHIL 303,Modern Philosophy
+PHIL 304,Nihilism and The Crisis of Modernity: 19th Century Philosophy
+PHIL 306,20th Century Philosophy
+PHIL 212,Classical Buddhist and Hindu Philosophy
+PHIL 320,Topics in Philosophy
+PHIL 402,Epistemology
+PHIL 403,Ethics and Action
+PHIL 404,Philosophy of Mind
+PHIL 405,Metaphysics
+READ 204,Discovering the World in the Classroom: Making Literacy Global
+WGSS 240,Critical Perspectives in WomenÕs and Gender Studies
+AFAM 200,Introduction to African American Studies
+ANTH 110,Introduction to Folklore
+ANTH 111,Myth and Culture
+ANTH 212,Africa Through Film
+ANTH 213,Anthropology of Latin America
+ANTH 215,Anthropology of the Caribbean
+ANTH 230,"Culture, Health and Illness"
+ANTH 307,Religion and Spirituality in World Cultures
+ANTH 333,Anthropology of Global Migration
+ANTH 324,Seminar: New England Ethnic and Regional Communities
+ARTH 214,Global Art History Study Tour
+ARTS 215,Global Studio Art Study Tour I
+ARTS 415,Global Studio Art Study Tour II
+CRJU 230,Immigration and Justice
+CRJU 241,"Women, Girls and Violence"
+CRJU 290,Mental Health in the Criminal Justice System
+CRJU 346,Criminal Procedure
+CRJU 247,Restorative and Transformative Justice
+CRJU 350,Behind the Walls: Crime and Justice
+CRJU 369,"Gender, Crime and Justice"
+DANC 251,Dance History
+ENGL 200,Personal and Public Writing
+ENGL 201,Technical Writing I
+ENGL 202,Business Communication
+ENGL 207,Technical Writing I for English Majors
+ENGL 280,The Journalistic Essay
+GEOG 381,Latin America: Globalization and Cohesion
+GEOG 386,Geography of Canada
+INTD 200,Introduction to Canadian Studies
+LTAC 201,Introduction to Latin American and Caribbean Studies
+MUSC 260,Introduction to Western Classical Music
+PHIL 406,Applied Ethics
+POLI 274,Western Political Thought - Plato to the Present
+POLI 285,Law and the Judicial Process
+POLI 330,Politics of East Asia
+POLI 479,Public Policy
+READ 201,Teaching Content Area Literacies in Elementary and Early Childhood Classrooms
+SOCI 204,"Gender, Sexuality and Society"
+SOCI 211,Homelessness in U.S. Society
+SOCI 214,Middle Eastern Societies
+SOCI 219,Population and Society
+SOCI 226,Food and Society
+SOCI 232,Understanding Japanese Society
+SOCI 239,Unequal Spaces
+SOCI 245,Race and Ethnicity in America
+SOCI 256,City Neighborhoods: Exploring the Formation of Urban Enclaves
+SOCI 337,Environmental Sociology
+SOCI 347,Immigration and Migration: A Sociological Perspective
+SOCI 353,Experiencing World Cities
+SOCI 360,Feminist Theory in Sociology
+THEA 219,Introduction to Latin American and Caribbean Theatre
+ANTH 130,"Monkeys, Apes and Us"
+ANTH 216,Anthropology of the Middle East
+ANTH 218,Anthropology of Childhood
+ARTH 208,Survey of Islamic Art and Architecture
+ARTH 211,Monuments as Cultural Symbols and Emblems of Power
+ARTH 212,Art and Culture in Latin America: From Independence to the Present
+ARTH 218,History of Photography
+ARTH 219,Pre-Columbian Art and Architecture
+ARTS 116,Introduction to Digital Photography
+ARTS 221,Sustainable Science and Art Studio
+CHEM 221,Sustainable Science and Art Laboratory
+CHST 203,Introduction to Childhood Studies
+COMM 260,Group Communication and Decision Making
+EDHM 235,"Learning, Motivation, and Teaching"
+INTD 233,Introduction to International Migration Studies
+MENA 360,MENA Study Abroad - All Majors (Speaking Intensive)
+MUSC 263,Music of India
+MUSC 362,Music of the World
+PHIL 220,Ethics Bowl: Making the Case for WhatÕs Right
+SOCI 230,Art and American Society
+SUST 101,Sustainability Innovation and Leadership

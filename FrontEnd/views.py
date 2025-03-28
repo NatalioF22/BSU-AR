@@ -1,6 +1,7 @@
 # Add these view functions to your views.py file
 from django.shortcuts import render, get_object_or_404
 from BackEnd.models import Department, Subject, Roadmap, Professor
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Frontend views (public, no login required)
 def index(request):
@@ -40,9 +41,11 @@ def public_department_detail(request, pk):
     }
     return render(request, 'frontend/department_detail.html', context)
 
+
+
 def public_subjects(request):
     """View for public listing of all subjects."""
-    subjects = Subject.objects.all()
+    subjects_list = Subject.objects.all()
     departments = Department.objects.all()
     
     # Filter by department if provided
@@ -50,9 +53,22 @@ def public_subjects(request):
     if department_id:
         try:
             department = Department.objects.get(id=department_id)
-            subjects = subjects.filter(department=department)
+            subjects_list = subjects_list.filter(department=department)
         except Department.DoesNotExist:
             pass
+    
+    # Pagination - 50 items per page
+    paginator = Paginator(subjects_list, 21)
+    page = request.GET.get('page')
+    
+    try:
+        subjects = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page
+        subjects = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range, deliver last page of results
+        subjects = paginator.page(paginator.num_pages)
     
     context = {
         'subjects': subjects,
