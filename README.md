@@ -1,7 +1,7 @@
-# ONORS PROJECT
+# HONORS PROJECT
 ## Bridgewater State University Academic Roadmap
 
-### Author: Natalio Gomes
+### Student: Natalio Gomes
 ### Mentor: Dr. Nolin
 ### Class: COMP 335 -  WEB DEVELOPMENT
 
